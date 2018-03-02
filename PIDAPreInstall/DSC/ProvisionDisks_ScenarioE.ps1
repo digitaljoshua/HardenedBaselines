@@ -1,4 +1,4 @@
-Configuration Setup_ProvisionDisks_ScenarioE
+Configuration ProvisionDisks_ScenarioE
 {	
 	# Retries for disk creation
 	[Int]$RetryCount = 5

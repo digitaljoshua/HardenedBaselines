@@ -46,7 +46,7 @@ this should be a group.
 .\PIDataArchive_BasicWindowsImplementation -NodeName "myPI" -PIAdministratorsADGroup 'mydomain\PI Admins' -PIUsersADGroup 'mydomain\PI Users'
 
 #>
-Configuration PIDataArchive_BasicWindowsImplementation
+Configuration PIDataArchive_BasicWISImplementation
 {
     param(
         [String]
@@ -144,7 +144,8 @@ Configuration PIDataArchive_BasicWindowsImplementation
                                 @{Name=$PIInterfacesADGroup;Identity='PI Interfaces'},
                                 @{Name=$PIPointsAnalysisCreatorADGroup;Identity='PI Points&Analysis Creator'},
                                 @{Name=$PIUsersADGroup;Identity='PI Users'},
-                                @{Name=$PIWebAppsADGroup;Identity='PI Web Apps'}
+                                @{Name=$PIWebAppsADGroup;Identity='PI Web Apps'},
+								@{Name='NT Authority\SYSTEM';Identity='piadmins'}
                             )
 
         Foreach($DesiredMapping in $DesiredMappings)

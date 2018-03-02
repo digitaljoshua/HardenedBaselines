@@ -1,0 +1,8 @@
+"Identity","PrincipalName"
+"piadmins","NT AUTHORITY\SYSTEM"
+"piadmins","domain\PI Admins"
+"PI Buffers","domain\PI Buffers"
+"PI Interfaces","domain\PI Interfaces"
+"PI Points&Analysis Creator","domain\PI Analytics"
+"PI Users","domain\PI Users"
+"PI Web Apps","domain\PI Web Apps"

@@ -1,0 +1,4 @@
+"Access","Hostmask"
+"Allow","10.*.*.*"
+"Allow","192.168.*.*"
+"Allow","172.*.*.*"

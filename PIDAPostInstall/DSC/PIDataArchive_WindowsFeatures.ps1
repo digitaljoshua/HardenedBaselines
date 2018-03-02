@@ -1,8 +1,8 @@
 ﻿# Starting with domain joined Windows Server 2016 Core Machine
-Configuration PIDataArchiveOSBaseline
+Configuration PIDataArchive_WindowsFeatures
 {
     param(
-        [string]$ComputerName="localhost"
+        [string]$NodeName="localhost",
 		[string[]]$ApprovedFeatures = @(
 											'FileAndStorage-Services',
 											'Storage-Services',
@@ -20,30 +20,30 @@ Configuration PIDataArchiveOSBaseline
 										)
     )
     
-    Import-DscResource -ModuleName PSDesiredStateConfiguration, xPSDesiredStateConfiguration, xNetworking
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
 
-    Node $ComputerName
+    Node $NodeName
     {
-			$AllFeatures = Get-WindowsFeature | Select-Object -ExpandProperty Name
+		$AllFeatures = Get-WindowsFeature | Select-Object -ExpandProperty Name
 			
-			Foreach($Feature in $AllFeatures)
+		Foreach($Feature in $AllFeatures)
+		{
+			if($Feature -in $ApprovedFeatures)
 			{
-				if($Feature -in $ApprovedFeatures)
+				WindowsFeatureSet $( $Feature + '_Enable' )
 				{
-					WindowsFeatureSet "$Feature_Enable"
-					{
-						Name = $Feature
-						Ensure = 'Present'
-					}
+					Name = $Feature
+					Ensure = 'Present'
 				}
-				else
+			}
+			else
+			{
+				WindowsFeatureSet $( $Feature + '_Disable' )
 				{
-					WindowsFeatureSet "$Feature_Disable"
-					{
-						Name = $Feature
-						Ensure = 'Absent'
-					}
+					Name = $Feature
+					Ensure = 'Absent'
 				}
-			}			
+			}
+		}			
 	}
 }

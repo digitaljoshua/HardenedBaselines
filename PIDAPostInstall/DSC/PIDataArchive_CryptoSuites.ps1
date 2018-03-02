@@ -1,13 +1,13 @@
 ﻿# Starting with domain joined Windows Server 2016 Core Machine
-Configuration HardenedConfig_OSIsoft_PIDataArchive_CryptoSuites
+Configuration PIDataArchive_CryptoSuites
 {
     param(
-        [string]$ComputerName="localhost"
+        [string]$NodeName="localhost"
     )
     
     Import-DscResource -ModuleName PSDesiredStateConfiguration, xPSDesiredStateConfiguration
 
-    Node $ComputerName
+    Node $NodeName
     {
 			# TLS/SSL Security Considerations
 			# https://technet.microsoft.com/en-us/library/dn786446(v=ws.11).aspx
@@ -103,17 +103,5 @@ Configuration HardenedConfig_OSIsoft_PIDataArchive_CryptoSuites
 					}
 				}
 			}
-		# https://docs.microsoft.com/en-us/windows/access-protection/credential-guard/credential-guard-manage
-		$LSARegistryKey = 'HKLM:\SYSTEM\CurrentControlSet\Control\LSA'
-		
-		Registry "$LSARegistryKey\LsaCfgFlags"
-		{
-			Ensure = 'Present'
-			Key = $LSARegistryKey
-			ValueName = 'LsaCfgFlags'
-			ValueData = 1
-			ValueType = 'DWORD'
-		}
-		#endregion
 	}
 }

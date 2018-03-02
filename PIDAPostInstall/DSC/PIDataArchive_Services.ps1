@@ -1,12 +1,12 @@
-﻿Configuration HardenedConfig_OSIsoft_PIDataArchive_Services
+﻿Configuration PIDataArchive_Services
 {
     param(
-        [string]$ComputerName="localhost"
+        [string]$NodeName="localhost"
     )
     
     Import-DscResource -ModuleName PSDesiredStateConfiguration
 
-    Node $ComputerName
+    Node $NodeName
     {
 			[String[]]$ServicesToDisable = @()
 			# Optional PI services to disable
@@ -15,19 +15,19 @@
 										"PIBaGen", 
 										"pibatch", 
 										"pibufss",
+										"PIDirectoryPublisher",
 										"pilogsrv",
 										"pilogsrvX64",
 										"pirecalc"
 									)
 			# Remaining OS Services not needed for PI Data Archive.
-			$ServicesToDisable += @(	
-										"AppXSvc",  
+			$ServicesToDisable += @(	 
 										"AppMgmt",
-										"ClipSVC",
 										"DiagTrack",
 										"sacsvr",
 										"SNMPTRAP",
-										"seclogon"
+										"seclogon",
+										"WinHttpAutoProxySvc"
 									)
 			# Services disabled by default
 			$ServicesToDisable += @(

@@ -1,5 +1,5 @@
 ﻿       
-Configuration HardenedConfig_Microsoft_WindowsServer2016_MemberBaseline
+Configuration WindowsServer2016_MicrosoftBaseline
 {
 
 	Import-DSCResource -ModuleName 'PSDesiredStateConfiguration'
