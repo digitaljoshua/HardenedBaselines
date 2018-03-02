@@ -1,12 +1,12 @@
-﻿Configuration PIDataArchiveOSBaseline
+﻿Configuration PIDataArchive_Defender
 {
     param(
-        [string]$ComputerName="localhost"
+        [string]$NodeName="localhost"
     )
     
-    Import-DscResource -ModuleName PSDesiredStateConfiguration, xPSDesiredStateConfiguration, xNetworking
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
 
-    Node $ComputerName
+    Node $NodeName
     {	
 		# Enable Device Guard
 		# https://docs.microsoft.com/en-us/windows/device-security/device-guard/deploy-device-guard-enable-virtualization-based-security

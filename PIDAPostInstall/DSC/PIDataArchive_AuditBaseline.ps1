@@ -67,7 +67,7 @@ Configuration PIDataArchive_AuditBaseline
         
         [ValidateSet('3','19','51')]
         [Int32] 
-        $AuthenticationPolicy='3'
+        $AuthenticationPolicy='51'
          )
 
     Import-DscResource -ModuleName PISecurityDSC

@@ -1,18 +1,46 @@
 ﻿# Starting with domain joined Windows Server 2016 Core Machine
-Configuration PIDataArchiveOSBaseline
+Configuration PIDataArchive_Networking
 {
     param(
-        [string]$ComputerName="localhost"
+        [string]$NodeName="localhost",
+		[string]$InterfaceAlias="Microsoft Hyper-V Network Adapter"
     )
     
     Import-DscResource -ModuleName PSDesiredStateConfiguration, xNetworking
 
-    Node $ComputerName
+    Node $NodeName
     {
-            $FirewallRules = Get-NetFirewallRule | select ID
+			xNetBIOS DisableNetBIOS 
+			{
+				InterfaceAlias = $InterfaceAlias
+				Setting        = 'Disable'
+			}
+			
+			$FirewallProfiles = @(
+									'Private',
+									'Public',
+									'Domain'
+								)
+			
+			Foreach($Profile in $FirewallProfiles)
+			{
+				xFirewallProfile ("FirewallProfile_" + $Profile)
+				{
+					Name = $Profile
+					Enabled = 'True'
+					DefaultInboundAction = 'Block'
+					DefaultOutboundAction = 'Block'
+					AllowInboundRules = 'True'
+					NotifyOnListen = 'True'
+					LogFileName = '%systemroot%\system32\LogFiles\Firewall\pfirewall.log'
+					LogMaxSizeKilobytes = 20480
+					LogAllowed = 'False'
+					LogBlocked = 'True'
+				}
+			}
 			
 			# Firewall - custom rules to enable
-            xFirewall PIDataArchive_ClientConnections
+            xFirewall PIDataArchive_ClientConnections_In
             {
                 Direction = 'Inbound'
                 Name = 'PI-Data-Archive-PINET-TCP-In'
@@ -25,51 +53,36 @@ Configuration PIDataArchiveOSBaseline
                 LocalPort = '5450'
                 Ensure = 'Present'
             }
+			
+			xFirewall PIDataArchive_ClientConnections_Out
+            {
+                Direction = 'Outbound'
+                Name = 'PI-Data-Archive-PINET-TCP-Out'
+                DisplayName = 'PI Data Archive PINET (TCP-Out)'
+                Description = 'Outbound rule for PI Data Archive to allow PINET traffic.'
+                Group = 'PI System'
+                Enabled = 'True'
+                Action = 'Allow'
+                Protocol = 'TCP'
+                RemotePort = '49152-65535'
+                Ensure = 'Present'
+            }
         
         [string[]]$FirewallRulesEnabledByDefault = @(                    
-										"WINRM-HTTP-In-TCP",                  
-										"CoreNet-ICMP6-DU-In",                       
-										"CoreNet-ICMP6-PTB-In",                      
-										"CoreNet-ICMP6-PTB-Out",                     
-										"CoreNet-ICMP6-TE-In",                       
-										"CoreNet-ICMP6-TE-Out",                      
-										"CoreNet-ICMP6-PP-In",                       
-										"CoreNet-ICMP6-PP-Out",                      
-										"CoreNet-ICMP6-NDS-In",                      
-										"CoreNet-ICMP6-NDS-Out",                     
-										"CoreNet-ICMP6-NDA-In",                      
-										"CoreNet-ICMP6-NDA-Out",                     
-										"CoreNet-ICMP6-RA-In",                       
-										"CoreNet-ICMP6-RA-Out",                      
-										"CoreNet-ICMP6-RS-In",                       
-										"CoreNet-ICMP6-RS-Out",                      
-										"CoreNet-ICMP6-LQ-In",                       
-										"CoreNet-ICMP6-LQ-Out",                      
-										"CoreNet-ICMP6-LR-In",                       
-										"CoreNet-ICMP6-LR-Out",                      
-										"CoreNet-ICMP6-LR2-In",                      
-										"CoreNet-ICMP6-LR2-Out",                     
-										"CoreNet-ICMP6-LD-In",                       
-										"CoreNet-ICMP6-LD-Out",                      
+										"WINRM-HTTP-In-TCP",                                       
 										"CoreNet-ICMP4-DUFRAG-In",                   
 										"CoreNet-IGMP-In",                           
 										"CoreNet-IGMP-Out",                          
 										"CoreNet-DHCP-In",                           
-										"CoreNet-DHCP-Out",                          
-										"CoreNet-DHCPV6-In",                         
-										"CoreNet-DHCPV6-Out",                        
+										"CoreNet-DHCP-Out",                                                 
 										"CoreNet-Teredo-In",                         
 										"CoreNet-Teredo-Out",                        
 										"CoreNet-IPHTTPS-In",                        
-										"CoreNet-IPHTTPS-Out",                       
-										"CoreNet-IPv6-In",                           
-										"CoreNet-IPv6-Out",                          
+										"CoreNet-IPHTTPS-Out",                                                
 										"CoreNet-GP-NP-Out-TCP",                     
 										"CoreNet-GP-Out-TCP",                        
 										"CoreNet-DNS-Out-UDP",                       
-										"CoreNet-GP-LSASS-Out-TCP",                  
-										"MDNS-In-UDP",                               
-										"MDNS-Out-UDP"
+										"CoreNet-GP-LSASS-Out-TCP"                  
                                     )
         # Firewall - infrastructure rules to enable
         ForEach($rule in $FirewallRulesEnabledByDefault)
@@ -192,7 +205,36 @@ Configuration PIDataArchiveOSBaseline
 										"AllJoyn-Router-In-UDP",                     
 										"AllJoyn-Router-Out-UDP",
 										"WINRM-HTTP-In-TCP-PUBLIC",
-										"Microsoft-Windows-Unified-Telemetry-Client"
+										"Microsoft-Windows-Unified-Telemetry-Client",
+										"CoreNet-ICMP6-DU-In",                       
+										"CoreNet-ICMP6-PTB-In",                      
+										"CoreNet-ICMP6-PTB-Out",                     
+										"CoreNet-ICMP6-TE-In",                       
+										"CoreNet-ICMP6-TE-Out",                      
+										"CoreNet-ICMP6-PP-In",                       
+										"CoreNet-ICMP6-PP-Out",                      
+										"CoreNet-ICMP6-NDS-In",                      
+										"CoreNet-ICMP6-NDS-Out",                     
+										"CoreNet-ICMP6-NDA-In",                      
+										"CoreNet-ICMP6-NDA-Out",                     
+										"CoreNet-ICMP6-RA-In",                       
+										"CoreNet-ICMP6-RA-Out",                      
+										"CoreNet-ICMP6-RS-In",                       
+										"CoreNet-ICMP6-RS-Out",                      
+										"CoreNet-ICMP6-LQ-In",                       
+										"CoreNet-ICMP6-LQ-Out",                      
+										"CoreNet-ICMP6-LR-In",                       
+										"CoreNet-ICMP6-LR-Out",                      
+										"CoreNet-ICMP6-LR2-In",                      
+										"CoreNet-ICMP6-LR2-Out",                     
+										"CoreNet-ICMP6-LD-In",                       
+										"CoreNet-ICMP6-LD-Out",
+										"CoreNet-IPv6-In",                           
+										"CoreNet-IPv6-Out",
+										"CoreNet-DHCPV6-In",                         
+										"CoreNet-DHCPV6-Out",
+										"MDNS-In-UDP",                               
+										"MDNS-Out-UDP"
 									)
 		
 		# Firewall - infrastructurs rules to disable
@@ -200,129 +242,12 @@ Configuration PIDataArchiveOSBaseline
 		
         ForEach($rule in $FirewallRulesToDisable)
         {
-			if($rule -in $FirewallRules)
-			{
 				xFirewall $rule
 				{
 					Name = $rule
 					Enabled = 'False'
 					Ensure = 'Present'
 				}
-			}
         }
 	}
 }
-			# TLS/SSL Security Considerations
-			# https://technet.microsoft.com/en-us/library/dn786446(v=ws.11).aspx
-			$schannelProtocols = @{
-							'PCT 1.0'=$false;
-                	        'SSL 2.0'=$false;
-                               		'SSL 3.0'=$false;
-                                	'TLS 1.0'=$true;
-              		                'TLS 1.1'=$true;
-                                	'TLS 1.2'=$true;
-                         		}
-			$schannelCiphers = @{	
-									'NULL'=$false;
-									'DES 56/56'=$false; 
-                       		        'RC2 40/128'=$false;
-                                	'RC2 56/128'=$false;
-                                	'RC2 128/128'=$false;
-                                	'RC4 40/128'=$false;
-                                	'RC4 56/128'=$false;
-									'RC4 64/128'=$false;
-									'RC4 128/128'=$false;
-									'Triple DES 168'=$true;
-									'AES 128/128'=$true;
-									'AES 256/256'=$true; 
-                             	}
-        	[string[]]$cipherSuites = @(
-                                        "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384_P384",
-                                        "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256_P256",
-                                        "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256",
-                                        "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256",
-                                        "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA_P256",
-                                        "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA_P256",
-                                        "TLS_RSA_WITH_AES_256_CBC_SHA256",
-                                        "TLS_RSA_WITH_AES_128_CBC_SHA256",
-                                        "TLS_RSA_WITH_AES_256_CBC_SHA",
-                                        "TLS_RSA_WITH_AES_128_CBC_SHA"
-                                    )
-			
-			# Value of 0 disables, 1 enables protocol or cipher
-			# https://technet.microsoft.com/en-us/library/dn786418(v=ws.11).aspx#BKMK_SchannelTR_Ciphers
-			$EnabledValue = "1"
-			$DisabledValue = "0"
-			
-			$cryptographyKeyPath = 'HKLM:\System\CurrentControlSet\Control\Cryptography\Configuration\Local\SSL\00010002\'
-			xRegistry $($cryptographyKeyPath + 'Functions')
-			{
-				ValueName = 'Functions'
-				ValueType = 'MultiString'
-				Key = $cryptographyKeyPath
-				ValueData = $cipherSuites
-				Force = $true
-			}
-        
-			$schannelKeyPath = "HKLM:\System\CurrentControlSet\Control\SecurityProviders\SCHANNEL\"
-			foreach ($cipher in $schannelCiphers.GetEnumerator())
-			{
-					if($cipher.Value) { $ValueData = $EnabledValue }
-					else { $ValueData = $DisabledValue }
-
-				$TargetPath = $($schannelKeyPath + 'Ciphers\' + $cipher.Name)
-				xRegistry $($TargetPath + '\Enabled')
-				{
-					ValueName = 'Enabled'
-					ValueType = 'DWORD'
-					Key = $TargetPath
-					ValueData = $ValueData
-					Force = $true
-				}
-			}
-		
-			foreach ($protocol in $schannelProtocols.GetEnumerator())
-			{	
-				if($protocol.Value) 
-				{
-					$ValueData = $EnabledValue 
-				}
-				else 
-				{ 
-					$ValueData = $DisabledValue 
-				}
-				
-				foreach($Role in @('Server','Client'))
-				{
-					$TargetPath = $($schannelKeyPath + 'Protocols\' + $protocol.Name + '\' + $Role)
-					xRegistry $($TargetPath + '\Enabled')
-					{
-						ValueName = 'Enabled'
-						ValueType = 'DWORD'
-						Key = $TargetPath
-						ValueData = $ValueData
-						Force = $true
-					}
-				}
-			}
-		#endregion
-		$HVCIRegistryKey = $DGRegistryKey + '\Scenarios\HypervisorEnforcedCodeIntegrity'
-
-		Registry "$HVCIRegistryKey\Enabled"
-		{
-			Ensure = 'Present'
-			Key = $HVCIRegistryKey
-			ValueName = 'Enabled'
-			ValueData = 1
-			ValueType = 'DWORD'
-		}
-		
-		Registry "$HVCIRegistryKey\Locked"
-		{
-			Ensure = 'Present'
-			Key = $HVCIRegistryKey
-			ValueName = 'Locked'
-			ValueData = 0
-			ValueType = 'DWORD'
-		}
-		#endregion 
