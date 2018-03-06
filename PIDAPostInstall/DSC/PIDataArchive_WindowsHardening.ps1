@@ -1,7 +1,8 @@
 ﻿Configuration PIDataArchive_WindowsHardening
 {
     param(
-        [string]$NodeName="localhost"
+        [string]$NodeName="localhost",
+		[string]$PSTranscriptsDirectory="C:\PSTranscripts"
     )
     
     Import-DscResource -ModuleName PSDesiredStateConfiguration, xPSDesiredStateConfiguration, xNetworking
@@ -588,6 +589,55 @@
 				}
 			}
 		}
+		#endregion
+	
+		#region PowerShell Logging
+		# Script block logging
+        $PSLoggingKey = 'HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\PowerShell'
+		Registry "$PSLoggingKey\ScriptBlockLogging\EnableScriptBlockLogging"
+        {
+            Ensure = 'Present'
+		    Key = "$PSLoggingKey\ScriptBlockLogging"
+		    ValueData = 1
+            ValueName = 'EnableScriptBlockLogging'
+		    ValueType = 'DWORD'
+        }
+
+        #region Transcription
+        File PSTranscriptsDirectory
+        {
+            Ensure = "Present"
+            Type = "Directory"
+            DestinationPath = $PSTranscriptsDirectory   
+        }
+		
+		Registry "$PSLoggingKey\Transcription\EnableTranscription"
+        {
+            Ensure = 'Present'
+		    Key = "$PSLoggingKey\Transcription"
+		    ValueData = 1
+            ValueName = 'EnableTranscription'
+		    ValueType = 'DWORD'
+        }
+
+        Registry "$PSLoggingKey\Transcription\EnableInvocationHeader"
+        {
+            Ensure = 'Present'
+		    Key = "$PSLoggingKey\Transcription"
+		    ValueData = 1
+            ValueName = 'EnableInvocationHeader'
+		    ValueType = 'DWORD'
+        }
+        
+        Registry "$PSLoggingKey\Transcription\OutputDirectory"
+        {
+            Ensure = 'Present'
+		    Key = "$PSLoggingKey\Transcription"
+		    ValueData = $PSTranscriptsDirectory
+            ValueName = 'OutputDirectory'
+		    ValueType = 'ExpandString'
+			DependsOn = "[File]PSTranscriptsDirectory"
+        }
 		#endregion
 	}
 }
