@@ -603,7 +603,7 @@
 		    ValueType = 'DWORD'
         }
 
-        #region Transcription
+        # Transcription
         File PSTranscriptsDirectory
         {
             Ensure = "Present"
