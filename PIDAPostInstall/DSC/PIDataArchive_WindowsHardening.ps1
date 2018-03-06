@@ -11,7 +11,8 @@
     {
 	
 		#region Networking
-		xNetBIOS DisableNetBIOS 
+		$InterfaceAlias = "Microsoft Hyper-V Network Adapter"
+        xNetBIOS DisableNetBIOS 
 		{
 			InterfaceAlias = $InterfaceAlias
 			Setting        = 'Disable'
@@ -41,6 +42,7 @@
 		}
 			
 		# Firewall - custom rules to enable
+		$PINetMgrProgram = ($env:piserver + "bin\pinetmgr.exe")
         xFirewall PIDataArchive_ClientConnections_In
         {
             Direction = 'Inbound'
@@ -51,6 +53,8 @@
             Enabled = 'True'
             Action = 'Allow'
             Protocol = 'TCP'
+			Service = "PINetMgr"
+			Program = $PINetMgrProgram
             LocalPort = '5450'
             Ensure = 'Present'
         }
@@ -65,6 +69,8 @@
             Enabled = 'True'
             Action = 'Allow'
             Protocol = 'TCP'
+			Service = "PINetMgr"
+			Program = $PINetMgrProgram
             RemotePort = '49152-65535'
             Ensure = 'Present'
         }
