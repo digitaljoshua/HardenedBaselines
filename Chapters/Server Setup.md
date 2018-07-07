@@ -1,5 +1,7 @@
 # Server Setup
 
+The purpose of this section is to describe the installation of the PI Data Archive which was used as the basis for the scope of analysis in this CSDS.  
+
 ## OS Installation
 //TODO
 
