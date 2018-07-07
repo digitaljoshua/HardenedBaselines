@@ -79,6 +79,6 @@ This section includes the steps used after installation to crate the baseline us
     4.	Reboot the server.
 
 ## Navigation
-[Table of Contents](Table%20of%20Contents.md)  
-[Server Setup](Server%20Setup.md)
+[Table of Contents](../Table%20of%20Contents.md)  
+[Server Setup](../Server%20Setup.md)  
 Previous: [OS Installation](OS%20Installation.md)

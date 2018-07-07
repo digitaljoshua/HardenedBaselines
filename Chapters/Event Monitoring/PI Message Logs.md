@@ -39,4 +39,4 @@ The PI Tuning Parameter MessageLog_DayLimit determines the maximum number of day
 PI Message log files reside in %PISERVER%\log directory.  The %PISERVER% environmental variable can be set at installation time, but also determines the location of the parent folder of PI Data Archive service binaries and configuration files.  If it is desired to store logs on a dedicated partition or disk, then an NTFS junction point can be used to redirect the %PISERVER%\log folder to that volume.
 
 ## Navigation
-Return to [Event Monitoring](../(7)%20Event%20Monitoring.md)
+Return to [Event Monitoring](../Event%20Monitoring.md)

@@ -28,4 +28,4 @@ Log protection relies on NTFS access control to prevent exfiltration or removal 
 Windows Event Forwarding can be leveraged to aggregate logs and integrate with a SEIM.
 
 ## Navigation
-Return to [Event Monitoring](../(7)%20Event%20Monitoring.md)
+Return to [Event Monitoring](../Event%20Monitoring.md)

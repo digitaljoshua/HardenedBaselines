@@ -51,4 +51,4 @@ Auditing can be enabled on all or a subset of databases by setting the [EnableAu
 The ArchiveEditLogging parameter enables recording auditing events to the PI Message Logs for PI Archive and PI Snapshot event deletions and edits.  The BatchDbEditLogging parameter enables recording auditing events to the PI Message Logs for PI Batch and PI Unit Batch deletions and edits.
 
 ## Navigation
-Return to [Event Monitoring](../(7)%20Event%20Monitoring.md)
+Return to [Event Monitoring](../Event%20Monitoring.md)

@@ -30,6 +30,6 @@
         - xStorage 
 
 ## Navigation
-[Table of Contents](Table%20of%20Contents.md)  
-[Server Setup](Server%20Setup.md)
+[Table of Contents](../Table%20of%20Contents.md)  
+[Server Setup](../Server%20Setup.md)  
 Next: [PI Data Archive Installation](PI%20Data%20Archive%20Installation.md)

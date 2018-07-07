@@ -38,4 +38,4 @@ The ConnectionHistoryFlushInterval parameter determines how frequently updates a
 The ConnectionDatabaseRetentionDuration parameter determines how long connections are retained in the connection history after they have ended, as described in Use piconfig to set the retention period in the LiveLibrary.
 
 ## Navigation
-Return to [Event Monitoring](../(7)%20Event%20Monitoring.md)
+Return to [Event Monitoring](../Event%20Monitoring.md)
