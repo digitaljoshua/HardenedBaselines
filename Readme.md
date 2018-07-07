@@ -8,6 +8,8 @@ This document includes a generic hardening configuration to be applied to Window
 
 This documentation assumes that the reader has a competent working knowledge of Microsoft Windows Server and the OSIsoft PI Data Archive. This documentation does not provide training on Windows Server or the PI Data Archive. Wherever possible, this documentation will reference official OSIsoft and Microsoft documentation. 
 
+[Table of Contents](Table%20of%20Contents.md)
+
 ## Discussion
 
 To discuss this project or ask questions, please make a comment in the [PI Square Security Group](https://pisquare.osisoft.com/groups/security/). Please do not contact OSIsoft Technical Support regarding the PI Data Archive Hardened Configuration baseline. This document will be supported through this repository and PI Square. 
